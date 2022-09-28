@@ -3,7 +3,7 @@ import TodoItem from "@my-todo-app/shared"
 import './App.css';
 import axios from 'axios';
 
-axios.defaults.baseURL = "http://localhost:3001"
+axios.defaults.baseURL = process.env.REACT_APP_TODO_API || "http://localhost:3001"
 
 const fetchTodos = async (): Promise<TodoItem[]> => {
   const response = await axios.get<TodoItem[]>("/todos")
@@ -15,22 +15,32 @@ function App() {
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [error, setError] = useState<string | undefined>();
 
-  const createTodo = (todoText: string): void => {
+  const createTodo = async (todoText: string): Promise<void> => {
     const todoItem: TodoItem = {
       text: todoText,
       timeStamp: new Date()
     }
-    axios
-      .post<TodoItem[]>('/todos', todoItem)
-      .then((response) => setTodos(response.data))
+    try {
+      const response = await axios.post<TodoItem[]>('/todos', todoItem)
+      setTodos(response.data)
+    } catch (err) {
+      setTodos([])
+      setError('Something went wrong when fetching my todos...')
+    }
   }
 
   useEffect(() => {
-    fetchTodos().then(setTodos).catch((error) => {
-      setTodos([])
-      setError('Something went wrong when fetching my todos...')
-    })
-  }, [])
+    const interval = setInterval(() => {
+      fetchTodos()
+        .then(setTodos)
+        .catch((error) => {
+          setTodos([])
+          setError('Something went wrong when fetching my todos...')
+        });
+    }, 10000)
+
+    return () => clearInterval(interval)
+  }, []);
 
   const output = () => {
     if (error) {
