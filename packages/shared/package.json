@@ -1,0 +1,12 @@
+{
+  "name": "@my-todo-app/shared",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/todo-item.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
