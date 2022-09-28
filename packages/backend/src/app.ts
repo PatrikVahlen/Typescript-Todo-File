@@ -42,6 +42,6 @@ app.post('/todos', (req: Request<TodoItem>, res: Response<TodoItem[]>) => {
     res.send(TODO_ITEMS)
 })
 
-app.listen(port, function () {
+app.listen(port, async function () {
     console.log(`App is listening on port ${port} !`)
 })

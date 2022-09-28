@@ -48,7 +48,7 @@ function App() {
     } else if (todos) {
       return (<div>{
         todos.map((item) => {
-          return (<p key={item.id}>{item.text}</p>)
+          return (<p key={item._id}>{item.text}</p>)
         })
       }</div>)
     } else {
